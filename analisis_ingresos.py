@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 df = pd.read_csv("datos_filtrados_amba.txt", sep=';')
 
 # Filtrar ingresos válidos
-df = df[(df['CH06'] > 15) & (df['P47T'] > 0) & (df['PONDII'] > 0)]
+df = df[(df['P47T'] > 0) & (df['PONDII'] > 0)]
 
 # Factores de ajuste a precios de 2024
 factores_ipc_2024 = {
