@@ -20,12 +20,13 @@ for anio, grupo in df.groupby('ANO4'):
 df_empleo = pd.DataFrame(resultados).sort_values('anio')
 
 # Graficar
-plt.figure(figsize=(10, 5))
-plt.plot(df_empleo['anio'], df_empleo['tasa_empleo'], marker='o', color='green')
-plt.title("📈 Evolución Anual de la Tasa de Empleo en el AMBA (2016-2024)", fontsize=14)
-plt.xlabel("Año")
-plt.ylabel("Tasa de Empleo (%)")
-plt.xticks(df_empleo['anio'])
-plt.grid(True)
-plt.tight_layout()
-plt.show()
+if __name__ == "__main__":
+    plt.figure(figsize=(10, 5))
+    plt.plot(df_empleo['anio'], df_empleo['tasa_empleo'], marker='o', color='green')
+    plt.title("📈 Evolución Anual de la Tasa de Empleo en el AMBA (2016-2024)", fontsize=14)
+    plt.xlabel("Año")
+    plt.ylabel("Tasa de Empleo (%)")
+    plt.xticks(df_empleo['anio'])
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()

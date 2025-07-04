@@ -22,12 +22,13 @@ for anio, grupo in df.groupby('ANO4'):
 df_actividad = pd.DataFrame(resultados).sort_values('anio')
 
 # Graficar
-plt.figure(figsize=(10, 5))
-plt.plot(df_actividad['anio'], df_actividad['tasa_actividad'], marker='o', color='blue')
-plt.title("📈 Evolución Anual de la Tasa de Actividad en el AMBA (2016-2024)", fontsize=14)
-plt.xlabel("Año")
-plt.ylabel("Tasa de Actividad (%)")
-plt.xticks(df_actividad['anio'])
-plt.grid(True)
-plt.tight_layout()
-plt.show()
+if __name__ == "__main__":
+    plt.figure(figsize=(10, 5))
+    plt.plot(df_actividad['anio'], df_actividad['tasa_actividad'], marker='o', color='blue')
+    plt.title("📈 Evolución Anual de la Tasa de Actividad en el AMBA (2016-2024)", fontsize=14)
+    plt.xlabel("Año")
+    plt.ylabel("Tasa de Actividad (%)")
+    plt.xticks(df_actividad['anio'])
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()

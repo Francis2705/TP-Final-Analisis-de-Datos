@@ -23,15 +23,16 @@ for anio, grupo in df_filtrado.groupby('ANO4'):
 df_tasa_anual = pd.DataFrame(resultados).sort_values('anio')
 
 # Graficar
-plt.figure(figsize=(10, 5))
-plt.plot(df_tasa_anual['anio'], df_tasa_anual['tasa_desocupacion'], marker='o', color='darkred')
-plt.title("📈 Evolución Anual de la Tasa de Desocupación en el AMBA (2016-2024)", fontsize=14)
-plt.xlabel("Año")
-plt.ylabel("Tasa de Desocupación (%)")
-plt.xticks(df_tasa_anual['anio'])
-plt.grid(True)
-plt.tight_layout()
-plt.show()
+if __name__ == "__main__":
+    plt.figure(figsize=(10, 5))
+    plt.plot(df_tasa_anual['anio'], df_tasa_anual['tasa_desocupacion'], marker='o', color='darkred')
+    plt.title("📈 Evolución Anual de la Tasa de Desocupación en el AMBA (2016-2024)", fontsize=14)
+    plt.xlabel("Año")
+    plt.ylabel("Tasa de Desocupación (%)")
+    plt.xticks(df_tasa_anual['anio'])
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
 
 #el grafico muestra:
     #en el eje x los anios
