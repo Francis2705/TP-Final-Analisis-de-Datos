@@ -1,13 +1,22 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+#la p21 cayo mas q la p47t
+#hacer archivo aparte para la p21
+
 # Cargar datos
 df = pd.read_csv("datos_filtrados_amba.txt", sep=';')
 
-# Filtrar ingresos válidos
+# Filtrar ingresos válidos P4T7
 df = df[(df['P47T'] > 0) & (df['PONDII'] > 0)]
 
+# Filtrar ingresos válidos P21
+# df['P21'] = pd.to_numeric(df['P21'], errors='coerce')
+# df['PONDIIO'] = pd.to_numeric(df['PONDIIO'], errors='coerce')
+# df = df[(df['P21'] > 0) & (df['PONDIIO'] > 0)]
+
 # Factores de ajuste a precios de 2024
+# Factor anio: (1 + inflacion 2017) * (1 + inflacion 2018) * ... y asi hasta el 2024
 factores_ipc_2024 = {
     2016: 53.93,
     2017: 40.07,
