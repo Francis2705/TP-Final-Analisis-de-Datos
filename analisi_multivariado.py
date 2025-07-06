@@ -25,7 +25,7 @@ df = df[
     (df['PP04D_COD'] > 0)
 ]
 
-# Extraer tipo de relación laboral (3er dígito)
+# Extraer tipo de relación laboral (3er dígito) SE PUEDE CAMBIAR Y HACER CON EL ULTIMO DIGITO
 df['TIPO_RELACION'] = df['PP04D_COD'].astype(int).astype(str).str.zfill(5).str[2]
 df = df[df['TIPO_RELACION'].isin(['0', '1', '2', '3'])]
 
