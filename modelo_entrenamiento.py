@@ -38,7 +38,7 @@ df['INGRESO_REAL'] = df['P47T'] * df['FACTOR_IPC']
 # --- Filtrar datos válidos ---
 df_validos = df[
     (df['P47T'] > 0) &
-    (df['INGRESO_REAL'] >= 200_000) & (df['INGRESO_REAL'] <= 2_000_000) &
+    (df['INGRESO_REAL'] >= 200000) & (df['INGRESO_REAL'] <= 2000000) &
     (df['FACTOR_IPC'].notna()) &
     (df['NIVEL_ED'].isin(range(1, 7))) &
     (df['CH04'].isin([1, 2])) &
@@ -75,7 +75,7 @@ modelo = Pipeline(steps=[
 ])
 
 # --- Train/Test split ---
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 # --- Entrenar modelo ---
 modelo.fit(X_train, y_train)
