@@ -7,12 +7,11 @@ import matplotlib.colors
 import geopandas as gpd # para instalar geopandas:pip install geopandas
 
 #sirve para recuperar mapas bases de internet
-import contextily as ctx#pip install contextily
+import contextily as ctx #pip install contextily
 
 #carga el archivo como GeoDataFrame de GeoPandas
 #permite trabajar con los aglomerados geograficos como si fueran un DataFrame de Pandas
 aglomerado = gpd.read_file('aglomerados_eph.json') 
-aglomerado
 
 # print(aglomerado.head(2))
 
@@ -21,7 +20,7 @@ aglomerado
 
 #eph_codagl: codigo numerico del aglomerado según la EPH. Por ejemplo, 32 para CABA y 33 para provincia
 
-codigos_buenos_aires = ["32", "33", "34","38","02"]  # codigo eph
+codigos_buenos_aires = ["32", "33"]  # codigo eph
 
 #Buscamos en la columna eph_codagl y revisamos si el codigo coincide con alguno el de la lista
 #tendremos la parte de buenos aires para mostrar en el mapa
@@ -34,7 +33,7 @@ print(buenos_aires)
     38: San nicolas-Villa constitucion
     32: CABA
     34: Mar del plata
-    33:PArtidos del GBA
+    33: PArtidos del GBA
     02: La plata
 
 """
