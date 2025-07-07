@@ -21,7 +21,7 @@ aglomerado
 
 #eph_codagl: codigo numerico del aglomerado según la EPH. Por ejemplo, 32 para CABA y 33 para provincia
 
-codigos_buenos_aires = ["32", "33", "34","38","02"]  # codigo eph
+codigos_buenos_aires = ["32", "33"]  # codigo eph
 
 #Buscamos en la columna eph_codagl y revisamos si el codigo coincide con alguno el de la lista
 #tendremos la parte de buenos aires para mostrar en el mapa
@@ -31,11 +31,10 @@ buenos_aires = aglomerado[aglomerado['eph_codagl'].astype(str).isin(codigos_buen
 print(buenos_aires)
 
 """
-    38: San nicolas-Villa constitucion
+    
     32: CABA
-    34: Mar del plata
     33:PArtidos del GBA
-    02: La plata
+    
 
 """
 # (Opcional) Graficar el resultado
@@ -59,5 +58,4 @@ plt.title("Analizando aglomerados de todo Buenos Aires.")
 plt.axis('off')
 plt.show()
 
-# ctx.add_basemap(estaciones_subte.plot(color=estaciones_subte["LINEA"].map(color_estaciones),markersize=15,figsize=(8,8)),
-#                 crs=estaciones_subte.crs.to_string(),)
+
