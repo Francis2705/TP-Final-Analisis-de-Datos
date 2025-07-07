@@ -9,15 +9,14 @@ import geopandas as gpd # para instalar geopandas:pip install geopandas
 #sirve para recuperar mapas bases de internet
 import contextily as ctx #pip install contextily
 
+######################################## GRAFICO SIN VARIABLE ###########################################
+
 #carga el archivo como GeoDataFrame de GeoPandas
 #permite trabajar con los aglomerados geograficos como si fueran un DataFrame de Pandas
 aglomerado = gpd.read_file('aglomerados_eph.json') 
 
-# print(aglomerado.head(2))
-
 #como BS AS esta dividida en multiple aglomerados
 #Filtramos el GeoDataFrame con los eph_codagl correspondientes a los aglomerados que estan en BS AS
-
 #eph_codagl: codigo numerico del aglomerado según la EPH. Por ejemplo, 32 para CABA y 33 para provincia
 
 codigos_buenos_aires = ["32", "33"]  # codigo eph
@@ -26,27 +25,18 @@ codigos_buenos_aires = ["32", "33"]  # codigo eph
 #tendremos la parte de buenos aires para mostrar en el mapa
 buenos_aires = aglomerado[aglomerado['eph_codagl'].astype(str).isin(codigos_buenos_aires)]
 
+# lo convertimos a numero entero
+buenos_aires["eph_codagl"] = buenos_aires["eph_codagl"].astype(int)
+
+
 
 print(buenos_aires)
 
 """
-    
     32: CABA
-<<<<<<< HEAD
     33:PArtidos del GBA
-    
-=======
-    34: Mar del plata
-    33: PArtidos del GBA
-    02: La plata
->>>>>>> 9506b1b6f7cfaf14a4e4119351518e6d7705516b
 
 """
-# (Opcional) Graficar el resultado
-# buenos_aires.plot(column='eph_codagl', cmap='tab10', legend=True, edgecolor='black')
-# plt.title("Aglomerados del Gran Buenos Aires y CABA")
-# plt.show()
-
 
 #Es lo que permite ubicar los datos geográficos correctamente sobre un mapa.
 buenos_aires_filtrado = buenos_aires.to_crs(epsg=3857)
@@ -64,3 +54,48 @@ plt.axis('off')
 plt.show()
 
 
+
+
+######################################## GRAFICO CON UNA VARIABLE ###########################################
+
+"""
+    Mostramos los aglomerados de Buenos Aires,tanto de caba como de pba,usando
+    el promedio de la variable P47T como referencia para el color
+
+"""
+
+df = pd.read_csv("datos_filtrados_amba.txt", sep=';')
+
+# Convertir columna a numérica si hay valores no válidos
+df["P47T"] = pd.to_numeric(df["P47T"], errors="coerce")
+
+# Agrupar por aglomerado y calcular ingreso promedio
+datos_eph = df.groupby("AGLOMERADO", as_index=False)["P47T"].mean()
+datos_eph.rename(columns={"P47T": "ingreso_promedio"}, inplace=True)
+
+print(datos_eph)
+
+
+# Hacer el merge:Operacion para juntar dos tablas,es decir,dos dataframes
+# left_on: columna del DataFrame izquierdo que se usará para emparejar
+# right_on: columna del DataFrame derecho para emparejar
+datos_enriquecidos = buenos_aires.merge(datos_eph, left_on="eph_codagl", right_on="AGLOMERADO")
+
+
+# Reproyectar los datos enriquecidos
+datos_enriquecidos = datos_enriquecidos.to_crs(epsg=3857)
+
+# Graficar usando ingreso promedio
+ax = datos_enriquecidos.plot(column='ingreso_promedio',
+                                cmap='YlOrBr',  # Colores de calor
+                                legend=True,
+                                figsize=(10, 10),
+                                edgecolor='black',
+                                alpha=0.7)
+
+# Agregar mapa base
+ctx.add_basemap(ax, crs=datos_enriquecidos.crs.to_string(), source=ctx.providers.OpenStreetMap.Mapnik)
+
+plt.title("Ingreso promedio por aglomerado (EPH)")
+plt.axis('off')
+plt.show()
