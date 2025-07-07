@@ -7,12 +7,11 @@ import matplotlib.colors
 import geopandas as gpd # para instalar geopandas:pip install geopandas
 
 #sirve para recuperar mapas bases de internet
-import contextily as ctx#pip install contextily
+import contextily as ctx #pip install contextily
 
 #carga el archivo como GeoDataFrame de GeoPandas
 #permite trabajar con los aglomerados geograficos como si fueran un DataFrame de Pandas
 aglomerado = gpd.read_file('aglomerados_eph.json') 
-aglomerado
 
 # print(aglomerado.head(2))
 
@@ -33,8 +32,14 @@ print(buenos_aires)
 """
     
     32: CABA
+<<<<<<< HEAD
     33:PArtidos del GBA
     
+=======
+    34: Mar del plata
+    33: PArtidos del GBA
+    02: La plata
+>>>>>>> 9506b1b6f7cfaf14a4e4119351518e6d7705516b
 
 """
 # (Opcional) Graficar el resultado
