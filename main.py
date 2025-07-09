@@ -40,8 +40,8 @@ def mostrar_menu():
         ("7", "Ver evolución de medidas de posición"),
         ("8", "Ver análisis multivariado"),
         ("9", "Ver predicciones de ingresos"),
-        ("10", "Visualización: cantidad de gente en GBA"),
-        ("11", "Visualización: ingresos promedio en GBA"),
+        ("10", "Visualización: cantidad de gente en AMBA"),
+        ("11", "Visualización: ingresos promedio en AMBA"),
         ("12", "Salir del programa")
     ]
 
