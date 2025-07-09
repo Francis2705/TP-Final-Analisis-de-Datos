@@ -19,14 +19,13 @@ def mostrar_tasa_desocupacion(devolver_df=False):
         resultados.append({'anio': anio, 'tasa_desocupacion': round(tasa, 2)})
 
     df_tasa_anual = pd.DataFrame(resultados).sort_values('anio')
-    print(df_tasa_anual)
 
     if(devolver_df):
         return df_tasa_anual
 
     plt.figure(figsize=(10, 5))
     plt.plot(df_tasa_anual['anio'], df_tasa_anual['tasa_desocupacion'], marker='o', color='darkred')
-    plt.title("📈 Evolución Anual de la Tasa de Desocupación en el AMBA (2016-2024)", fontsize=14)
+    plt.title("Evolución Anual de la Tasa de Desocupación en el AMBA (2016-2024)", fontsize=14)
     plt.xlabel("Año")
     plt.ylabel("Tasa de Desocupación (%)")
     plt.xticks(df_tasa_anual['anio'])

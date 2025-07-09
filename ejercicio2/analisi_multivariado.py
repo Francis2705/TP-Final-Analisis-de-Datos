@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import OneHotEncoder
 
 def realizar_analisis_multivariado():
-    df = pd.read_csv("datos_filtrados_amba.txt", sep=';')
+    df = pd.read_csv("datos_filtrados_amba.txt", sep=';', low_memory=False)
     df['P47T'] = pd.to_numeric(df['P47T'], errors='coerce')
     df['PONDII'] = pd.to_numeric(df['PONDII'], errors='coerce')
     df['CH04'] = pd.to_numeric(df['CH04'], errors='coerce')
@@ -89,8 +89,8 @@ def realizar_analisis_multivariado():
         'CH04_Varón': 'Hombre'
     }, inplace=True)
 
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(12, 6))
     sns.heatmap(df_enconded_final.corr(), annot=True, cmap="coolwarm")
-    plt.title("🟦 Relacion de variables")
+    plt.title("Relacion de variables")
     plt.tight_layout()
     plt.show()

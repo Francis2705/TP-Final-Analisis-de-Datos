@@ -24,7 +24,7 @@ def mostrar_tasa_empleo(devolver_df=False):
 
     plt.figure(figsize=(10, 5))
     plt.plot(df_empleo['anio'], df_empleo['tasa_empleo'], marker='o', color='green')
-    plt.title("📈 Evolución Anual de la Tasa de Empleo en el AMBA (2016-2024)", fontsize=14)
+    plt.title("Evolución Anual de la Tasa de Empleo en el AMBA (2016-2024)", fontsize=14)
     plt.xlabel("Año")
     plt.ylabel("Tasa de Empleo (%)")
     plt.xticks(df_empleo['anio'])

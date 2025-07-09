@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def ver_evolucion_del_ingreso_promedio():
-    df = pd.read_csv("datos_filtrados_amba.txt", sep=';')
+    df = pd.read_csv("datos_filtrados_amba.txt", sep=';', low_memory=False)
     df = df[(df['P47T'] > 0) & (df['PONDII'] > 0)]
 
     # Factores de ajuste a precios de 2024
@@ -40,12 +40,11 @@ def ver_evolucion_del_ingreso_promedio():
         })
 
     df_ingresos = pd.DataFrame(resultados).sort_values('anio')
-    print(df_ingresos)
 
     plt.figure(figsize=(10, 6))
     plt.plot(df_ingresos['anio'], df_ingresos['ingreso_promedio_nominal'], marker='o', label='Ingreso Nominal', color='orange')
     plt.plot(df_ingresos['anio'], df_ingresos['ingreso_promedio_real'], marker='o', label='Ingreso Real (2024)', color='purple')
-    plt.title("💵 Evolución del Ingreso Promedio Individual en el AMBA (2016-2024)", fontsize=14)
+    plt.title("Evolución del Ingreso Promedio Individual en el AMBA (2016-2024)", fontsize=14)
     plt.xlabel("Año")
     plt.ylabel("Ingreso mensual (pesos de 2024)")
     plt.xticks(df_ingresos['anio'])

@@ -94,7 +94,7 @@ def realizar_prediccion():
     sns.scatterplot(x=y_test_exp, y=y_pred, alpha=0.4)
     max_val = max(y_test_exp.max(), y_pred.max()) #linea ideal (donde predicho = real)
     plt.plot([0, max_val], [0, max_val], color='red', linestyle='--', label='Predicción perfecta')
-    plt.title('📈 Comparación entre ingreso real y predicho')
+    plt.title('Comparación entre ingreso real y predicho')
     plt.xlabel('Ingreso real 2024 ($)')
     plt.ylabel('Ingreso predicho ($)')
     plt.legend()

@@ -15,8 +15,11 @@ def realizar_grafico_sin_variable():
     #Tendremos la parte de buenos aires para mostrar en el mapa
     buenos_aires = aglomerado[aglomerado['eph_codagl'].astype(str).isin(codigos_buenos_aires)]
 
-    #Lo convertimos a numero entero
-    buenos_aires["eph_codagl"] = buenos_aires["eph_codagl"].astype(int)
+    buenos_aires = buenos_aires.copy()
+    buenos_aires.loc[:, "eph_codagl"] = buenos_aires["eph_codagl"].astype(int)
+
+    #Convertir a categoría para que la leyenda no muestre valores con coma
+    buenos_aires["eph_codagl"] = buenos_aires["eph_codagl"].astype("category")
 
     #Es lo que permite ubicar los datos geográficos correctamente sobre un mapa.
     buenos_aires_filtrado = buenos_aires.to_crs(epsg=3857)
@@ -24,7 +27,7 @@ def realizar_grafico_sin_variable():
     #fifsize: tamaño del grafico
     #alpha: transparencia
     #edgecolor='red': borde negro para los poligonos (marca los limites de los barrios, caba, etc)
-    ax = buenos_aires_filtrado.plot(column='eph_codagl', cmap='Set3',legend=True,figsize=(10, 10), alpha=0.5, edgecolor='red')
+    ax = buenos_aires_filtrado.plot(column='eph_codagl', cmap='Set3',legend=True,figsize=(8, 6), alpha=0.5, edgecolor='red')
 
     #Esto permite ver los aglomerados superpuestos al mapa real
     ctx.add_basemap(ax, crs=buenos_aires_filtrado.crs.to_string(), source=ctx.providers.OpenStreetMap.Mapnik)

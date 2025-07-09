@@ -51,7 +51,7 @@ def ver_evolucion_medidas_tendecia_central():
     plt.plot(df_medidas['anio'], df_medidas['media_real'], marker='o', label='Media (real)', color='green')
     plt.plot(df_medidas['anio'], df_medidas['mediana_real'], marker='o', label='Mediana (real)', color='red')
 
-    plt.title("📊 Evolución de la Media y Mediana de Ingresos Totales Individuales (P47T, precios de 2024)", fontsize=13)
+    plt.title("Evolución de la Media y Mediana de Ingresos Totales Individuales (P47T, precios de 2024)", fontsize=13)
     plt.xlabel("Año")
     plt.ylabel("Ingreso mensual (pesos de 2024)")
     plt.xticks(df_medidas['anio'])

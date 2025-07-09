@@ -78,7 +78,7 @@ def ejecutar_opcion(opcion: int):
     }
 
     if opcion == 12:
-        console.print("\n👋 [bold green]¡Gracias por usar el sistema! Hasta la próxima.[/bold green]")
+        console.print("\n👋 [bold green]¡Gracias por usar el sistema! [/bold green]")
         return False
 
     accion = acciones.get(opcion)

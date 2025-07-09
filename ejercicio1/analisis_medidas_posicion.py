@@ -57,7 +57,7 @@ def ver_evolucion_medidas_posicion():
     plt.plot(df_posicion['anio'], df_posicion['P75'], marker='o', label='P75 (Q3)', color='orange')
     plt.plot(df_posicion['anio'], df_posicion['P90'], marker='o', label='P90', color='red')
 
-    plt.title("📈 Evolución de Percentiles de Ingreso Individual (P47T, precios 2024)", fontsize=14)
+    plt.title("Evolución de Percentiles de Ingreso Individual (P47T, precios 2024)", fontsize=14)
     plt.xlabel("Año")
     plt.ylabel("Ingreso mensual (pesos de 2024)")
     plt.xticks(df_posicion['anio'])

@@ -14,7 +14,7 @@ def mostrar_ingresos_poblacion():
     plt.plot(df_tasas['anio'], df_tasas['tasa_actividad'], marker='o', label='Tasa de Actividad (%)', color='blue')
     plt.plot(df_tasas['anio'], df_tasas['tasa_empleo'], marker='o', label='Tasa de Empleo (%)', color='green')
     plt.plot(df_tasas['anio'], df_tasas['tasa_desocupacion'], marker='o', label='Tasa de Desocupación (%)', color='crimson')
-    plt.title("📊 Evolución de Indicadores Laborales en el AMBA (2016-2024)", fontsize=14)
+    plt.title("Evolución de Indicadores Laborales en el AMBA (2016-2024)", fontsize=14)
     plt.xlabel("Año")
     plt.ylabel("Porcentaje (%)")
     plt.xticks(df_tasas['anio'])
