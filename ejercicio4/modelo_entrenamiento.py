@@ -106,3 +106,18 @@ def realizar_prediccion():
         #el eje x muestra el ingreso real
         #el eje y muestra el ingreso predicho por el modelo
         #la linea roja punteada indica donde deberian caer los puntos si el modelo fuera perfecto
+
+    # Obtener nombres de las columnas luego del preprocesamiento
+    columnas_codificadas = modelo.named_steps['pre'].get_feature_names_out()
+
+    # Obtener importancias
+    importancias = modelo.named_steps['regresor'].feature_importances_
+
+    # Crear DataFrame con las importancias
+    importancia_df = pd.DataFrame({
+        'Variable': columnas_codificadas,
+        'Importancia': importancias
+    }).sort_values(by='Importancia', ascending=False)
+
+    print("\n🌟 Importancia de cada variable en la predicción del ingreso total (P47T):")
+    print(importancia_df.head(15).to_string(index=False))
