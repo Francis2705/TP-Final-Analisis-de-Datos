@@ -1,21 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-#la p21 cayo mas q la p47t
-#hacer archivo aparte para la p21
-
 def ver_evolucion_del_ingreso_promedio():
-    
-    # Cargar datos
     df = pd.read_csv("datos_filtrados_amba.txt", sep=';')
-
-    # Filtrar ingresos válidos P4T7
     df = df[(df['P47T'] > 0) & (df['PONDII'] > 0)]
-
-    # Filtrar ingresos válidos P21
-    # df['P21'] = pd.to_numeric(df['P21'], errors='coerce')
-    # df['PONDIIO'] = pd.to_numeric(df['PONDIIO'], errors='coerce')
-    # df = df[(df['P21'] > 0) & (df['PONDIIO'] > 0)]
 
     # Factores de ajuste a precios de 2024
     # Factor anio: (1 + inflacion 2017) * (1 + inflacion 2018) * ... y asi hasta el 2024
@@ -52,11 +40,8 @@ def ver_evolucion_del_ingreso_promedio():
         })
 
     df_ingresos = pd.DataFrame(resultados).sort_values('anio')
-
-    # Mostrar la tabla
     print(df_ingresos)
 
-    # Gráfico
     plt.figure(figsize=(10, 6))
     plt.plot(df_ingresos['anio'], df_ingresos['ingreso_promedio_nominal'], marker='o', label='Ingreso Nominal', color='orange')
     plt.plot(df_ingresos['anio'], df_ingresos['ingreso_promedio_real'], marker='o', label='Ingreso Real (2024)', color='purple')
@@ -68,7 +53,3 @@ def ver_evolucion_del_ingreso_promedio():
     plt.legend()
     plt.tight_layout()
     plt.show()
-
-#fuentes consultadas:
-    #https://estudiodelamo.com/inflacion-argentina-anual-mensual/
-    #https://chequeado.com/inflacionacumulada/

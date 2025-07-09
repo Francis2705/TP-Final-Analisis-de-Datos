@@ -6,8 +6,6 @@ from sklearn.preprocessing import OneHotEncoder
 
 def realizar_analisis_multivariado():
     df = pd.read_csv("datos_filtrados_amba.txt", sep=';')
-
-    # Conversión de tipos
     df['P47T'] = pd.to_numeric(df['P47T'], errors='coerce')
     df['PONDII'] = pd.to_numeric(df['PONDII'], errors='coerce')
     df['CH04'] = pd.to_numeric(df['CH04'], errors='coerce')
@@ -15,26 +13,25 @@ def realizar_analisis_multivariado():
     df['NIVEL_ED'] = pd.to_numeric(df['NIVEL_ED'], errors='coerce')
     df['PP04D_COD'] = pd.to_numeric(df['PP04D_COD'], errors='coerce')
 
-    # Filtrar datos válidos
     df = df[
         (df['P47T'] > 0) &
         (df['PONDII'] > 0) &
         (df['CH04'].isin([1, 2])) &
         (df['CH06'] > 0) &
-        (df['NIVEL_ED'].isin([1, 2, 3, 4, 5, 6])) &  # excluye Ns/Nr y sin instrucción
+        (df['NIVEL_ED'].isin([1, 2, 3, 4, 5, 6])) &
         (df['PP04D_COD'].notna()) &
         (df['PP04D_COD'] > 0)
     ]
 
-    # Extraer tipo de relación laboral (3er dígito) SE PUEDE CAMBIAR Y HACER CON EL ULTIMO DIGITO
-    df['TIPO_RELACION'] = df['PP04D_COD'].astype(int).astype(str).str.zfill(5).str[2]
-    df = df[df['TIPO_RELACION'].isin(['0', '1', '2', '3'])]
+    # Extraer calificacion ocupacional
+    df['CALIFICACION_OCUPACIONAL'] = df['PP04D_COD'].astype(int).astype(str).str.zfill(5).str[-1]
+    df = df[df['CALIFICACION_OCUPACIONAL'].isin(['1', '2', '3', '4'])]
 
-    df['TIPO_RELACION'] = df['TIPO_RELACION'].map({
-        '0': 'Dirección',
-        '1': 'Cuenta propia',
-        '2': 'Jefes',
-        '3': 'Asalariados'
+    df['CALIFICACION_OCUPACIONAL'] = df['CALIFICACION_OCUPACIONAL'].map({
+        '1': 'Profesionales',
+        '2': 'Tecnicos',
+        '3': 'Operativo',
+        '4': 'No calificado'
     })
 
     # Mapas de etiquetas
@@ -48,7 +45,6 @@ def realizar_analisis_multivariado():
         6: 'Univ. Comp.'
     })
 
-    # Factores IPC 2024
     factores_ipc_2024 = {
         2016: 53.93,
         2017: 40.07,
@@ -64,22 +60,34 @@ def realizar_analisis_multivariado():
     df['INGRESO_REAL'] = df['P47T'] * df['FACTOR_IPC']
 
     # Agrupar y calcular ingreso promedio ponderado
-    df_grouped = df.groupby(['TIPO_RELACION', 'NIVEL_ED', 'CH04', 'CH06']).apply(
+    df_grouped = df.groupby(['CALIFICACION_OCUPACIONAL', 'NIVEL_ED', 'CH04', 'CH06']).apply(
         lambda x: np.average(x['INGRESO_REAL'], weights=x['PONDII'])
     ).reset_index(name='Ingreso promedio (real)')
 
-    # print(df_grouped)
-
-    encoder = OneHotEncoder(sparse_output=False, drop=None) #para analizar variables categoricas (fueron transformadas a binarias y se utiliza
-    # el onehotencoder)
-    x_cat = df_grouped[['TIPO_RELACION', 'NIVEL_ED', 'CH04']]
+    #Para analizar variables categoricas (fueron transformadas a binarias y se utiliza el OneHotEncoder
+    encoder = OneHotEncoder(sparse_output=False, drop=None)
+    x_cat = df_grouped[['CALIFICACION_OCUPACIONAL', 'NIVEL_ED', 'CH04']]
     x_enconded = encoder.fit_transform(x_cat)
     x_enconded_df = pd.DataFrame(x_enconded, columns=encoder.get_feature_names_out())
-    df_enconded_final = pd.concat([df_grouped.drop(columns=['TIPO_RELACION', 'NIVEL_ED', 'CH04']), x_enconded_df], axis=1)
+    df_enconded_final = pd.concat([df_grouped.drop(columns=['CALIFICACION_OCUPACIONAL', 'NIVEL_ED', 'CH04']), x_enconded_df], axis=1)
     df_enconded_final['Ingreso promedio (real)'] = df_grouped['Ingreso promedio (real)']
 
-    print(df_enconded_final) #hasta aca esta todo bien
-    #armar mas lindo el grafico con nombre mas descriptivos
+    # Renombrar columnas con nombres más legibles
+    df_enconded_final.rename(columns={
+        'CH06': 'Edad',
+        'CALIFICACION_OCUPACIONAL_No calificado': 'No calificado',
+        'CALIFICACION_OCUPACIONAL_Operativo': 'Operativo',
+        'CALIFICACION_OCUPACIONAL_Profesionales': 'Profesionales',
+        'CALIFICACION_OCUPACIONAL_Tecnicos': 'Tecnicos',
+        'NIVEL_ED_Prim. Comp.': 'Primario completo',
+        'NIVEL_ED_Prim. Incomp.': 'Primario incompleto',
+        'NIVEL_ED_Sec. Comp.': 'Secundario completo',
+        'NIVEL_ED_Sec. Incomp.': 'Secundario incompleto',
+        'NIVEL_ED_Univ. Comp.': 'Universitario completo',
+        'NIVEL_ED_Univ. Incomp.': 'Universitario incompleto',
+        'CH04_Mujer': 'Mujer',
+        'CH04_Varón': 'Hombre'
+    }, inplace=True)
 
     plt.figure(figsize=(8, 6))
     sns.heatmap(df_enconded_final.corr(), annot=True, cmap="coolwarm")

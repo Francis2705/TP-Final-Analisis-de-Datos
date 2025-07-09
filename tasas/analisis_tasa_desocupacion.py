@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 def mostrar_tasa_desocupacion(devolver_df=False):
     df = pd.read_csv('datos_filtrados_amba.txt', sep=';', header=0, low_memory=False)
-    df_filtrado = df[(df['CH06'] > 15) & (df['ESTADO'].isin([1, 2]))] #filtrar mayores a 15 anios (16 es la edad legal laboral) y con ESTADO válido
+    df_filtrado = df[(df['CH06'] > 9)]
     resultados = []
 
     for anio, grupo in df_filtrado.groupby('ANO4'):
@@ -12,20 +12,17 @@ def mostrar_tasa_desocupacion(devolver_df=False):
         pea = ocupados + desocupados
 
         if pea > 0:
-            tasa = (desocupados / pea) * 100 #calculo de la tasa de desocupacion
+            tasa = (desocupados / pea) * 100
         else:
             tasa = None
 
         resultados.append({'anio': anio, 'tasa_desocupacion': round(tasa, 2)})
-        # print(resultados[-1])
-        # en el 2016, la tasa promedio de desocupacion en el amba fue de 9.69
 
-    # Crear DataFrame de resultados
     df_tasa_anual = pd.DataFrame(resultados).sort_values('anio')
+    print(df_tasa_anual)
 
     if(devolver_df):
         return df_tasa_anual
-    # Graficar
 
     plt.figure(figsize=(10, 5))
     plt.plot(df_tasa_anual['anio'], df_tasa_anual['tasa_desocupacion'], marker='o', color='darkred')
@@ -37,8 +34,9 @@ def mostrar_tasa_desocupacion(devolver_df=False):
     plt.tight_layout()
     plt.show()
 
-    #el grafico muestra:
+    #El grafico muestra:
         #en el eje x los anios
         #en el eje y la tasa de desocupacion
         #y cada punto representa la tasa promedio anual de ese anio (promedio ponderado de los 4 trimestres)
         #NO SIGNIFICA QUE EN EL ULTIMO TRIMESTRE DEL ANIO LA TASA DE DESOCUPACION FUE ESA, sino que el promedio de los 4 trimestres dio ese num
+        #Ejemplo: en el 2016, la tasa promedio de desocupacion en el amba fue de 9.69

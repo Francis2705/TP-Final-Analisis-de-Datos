@@ -1,6 +1,0 @@
--chequear si esta bien lo de la inflacion con la p21 y la p47t
--hacer main de prueba para todos los puntos
--separar el codigo por archivos
--hacer comentarios explicativos
--hacer informe con graficos
--hacer archivos para la columna de la p21 (y despues hacer comparacio con la p47t)

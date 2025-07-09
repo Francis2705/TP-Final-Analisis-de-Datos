@@ -1,21 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-#hacer archivo aparte para la p21
-
 def ver_evolucion_medidas_tendecia_central():
-    
-    # Cargar datos filtrados
     df = pd.read_csv("datos_filtrados_amba.txt", sep=';', low_memory=False)
-
-    # Conversión de tipos
-    df['P47T'] = pd.to_numeric(df['P47T'], errors='coerce') #cambiar a p21 y muestra todo bien
+    df['P47T'] = pd.to_numeric(df['P47T'], errors='coerce')
     df['PONDII'] = pd.to_numeric(df['PONDII'], errors='coerce')
-
-    # Filtrar población válida
     df = df[(df['P47T'] > 0) & (df['PONDII'] > 0)]
 
-    # Factores IPC para ajustar a precios de 2024
     factores_ipc_2024 = {
     2016: 53.93,
     2017: 40.07,
@@ -40,7 +31,7 @@ def ver_evolucion_medidas_tendecia_central():
         media_nominal = ingreso_total / total_ponderacion
         media_real = media_nominal * ipc_factor
 
-        # Mediana ponderada: requiere ordenar y acumular
+        # Mediana ponderada
         grupo_ordenado = grupo.sort_values('P47T')
         grupo_ordenado['pond_acum'] = grupo_ordenado['PONDII'].cumsum()
         mitad_ponderacion = grupo_ordenado['PONDII'].sum() / 2
@@ -54,7 +45,6 @@ def ver_evolucion_medidas_tendecia_central():
         })
 
     df_medidas = pd.DataFrame(resultados).sort_values('anio')
-    print(df_medidas)
 
     # Gráfico
     plt.figure(figsize=(10, 6))

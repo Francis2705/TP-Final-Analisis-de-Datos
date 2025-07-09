@@ -1,8 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-#hacer archivo aparte para la p21
-
 # Función para obtener percentil ponderado
 def percentil_ponderado(grupo, variable, ponderador, percentil):
     df_ordenado = grupo.sort_values(variable).copy()
@@ -13,17 +11,11 @@ def percentil_ponderado(grupo, variable, ponderador, percentil):
     return valor
 
 def ver_evolucion_medidas_posicion():
-    # Cargar el archivo filtrado
     df = pd.read_csv("datos_filtrados_amba.txt", sep=';', low_memory=False)
-
-    # Convertir columnas necesarias
     df['P47T'] = pd.to_numeric(df['P47T'], errors='coerce')
     df['PONDII'] = pd.to_numeric(df['PONDII'], errors='coerce')
-
-    # Filtrar casos válidos
     df = df[(df['P47T'] > 0) & (df['PONDII'] > 0)]
 
-    # Factores IPC a precios 2024
     factores_ipc_2024 = {
         2016: 53.93,
         2017: 40.07,
@@ -36,8 +28,6 @@ def ver_evolucion_medidas_posicion():
         2024: 1.00,
     }
 
-
-    # Calcular medidas de posición por año
     resultados = []
 
     for anio, grupo in df.groupby('ANO4'):
@@ -59,9 +49,7 @@ def ver_evolucion_medidas_posicion():
         })
 
     df_posicion = pd.DataFrame(resultados).sort_values('anio')
-    print(df_posicion)
 
-    # Gráfico de evolución de percentiles
     plt.figure(figsize=(12, 6))
     plt.plot(df_posicion['anio'], df_posicion['P10'], marker='o', label='P10 (percentil 10)', color='gray')
     plt.plot(df_posicion['anio'], df_posicion['P25'], marker='o', label='P25 (Q1)', color='blue')

@@ -1,1 +1,4 @@
 datos_filtrados_amba.txt
+__pycache__/
+*.py[cod]
+*.pyo

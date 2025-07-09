@@ -15,16 +15,15 @@ def realizar_prediccion():
     columnas = ['P47T', 'NIVEL_ED', 'CH04', 'CH06', 'ANO4', 'PP03D', 'PP3E_TOT', 'PP3F_TOT', 'PP04A',
                 'P21', 'PP07H', 'PP07G1', 'PP07G2', 'PP07G3', 'PP07G4', 'ESTADO']
     for col in columnas:
-        df[col] = pd.to_numeric(df[col], errors='coerce') #convierte columnas a numerico, y los que no puede les pone NaN
+        df[col] = pd.to_numeric(df[col], errors='coerce')
 
     factores_ipc_2024 = {2016: 53.93, 2017: 40.07, 2018: 32.10, 2019: 21.73, 2020: 14.12, 2021: 10.38, 2022: 6.88, 2023: 3.18, 2024: 1.00}
-    df['FACTOR_IPC'] = df['ANO4'].map(factores_ipc_2024) #agrega una columna con el factor de ajuste del IPC segun el anio
+    df['FACTOR_IPC'] = df['ANO4'].map(factores_ipc_2024)
 
-    #ajustar a precios constantes de 2024
     df['P21_REAL'] = df['P21'] * df['FACTOR_IPC']
     df['P47T_REAL'] = df['P47T'] * df['FACTOR_IPC']
 
-    #filtrar datos validos y outliers
+    #Filtrar datos validos y outliers
     df_validos = df[
         (df['P47T_REAL'] >= 100000) & (df['P47T_REAL'] <= 6000000) & #ingresos totales entre 100.000 y 6.000.000
         (df['P21_REAL'] > 120000) & #ingreso de la ocupacion principal (se filtra por mayor a 100 dolares aproximadamente)
@@ -41,20 +40,20 @@ def realizar_prediccion():
         (df['ESTADO'].isin([1, 2])) #condicion de actividad (1=ocupado, 2=desocupado)
     ]
 
-    #variables predictoras: son variables que se consideran relevantes para predecir el ingreso total
+    #Variables predictoras: son variables que se consideran relevantes para predecir el ingreso total
     X = df_validos[['NIVEL_ED', 'CH04', 'CH06', 'PP03D', 'PP3E_TOT', 'PP3F_TOT',
                     'PP04A', 'P21_REAL', 'PP07H', 'PP07G1', 'PP07G2', 'PP07G3', 'PP07G4', 'ESTADO']]
-    #variable objetivo: es la variable que se quiere predecir
+    #Variable objetivo: es la variable que se quiere predecir
     y = np.log(df_validos['P47T_REAL']) #se usa el log para que los ingresos extremos no dominen el modelo
 
-    #paso las variables categoricas a binarias (OneHotEncoder), dejo las numericas como estan y le pongo el nombre de 'onehot' a la transformacion
+    #Paso las variables categoricas a binarias (OneHotEncoder), dejo las numericas como estan y le pongo el nombre de 'onehot' a la transformacion
     categoricas = ['NIVEL_ED', 'CH04', 'PP04A', 'PP07H', 'PP07G1', 'PP07G2', 'PP07G3', 'PP07G4', 'ESTADO']
     preprocesamiento = ColumnTransformer([('onehot', OneHotEncoder(drop='first'), categoricas)], remainder='passthrough')
 
-    #el pipeline permite encadenar el preprocesamiento
-    #primero: hace el procesamiento de las variables categoricas con el OneHotEncoder
-    #segundo: crea el modelo de regresion con RandomForestRegressor basado en arboles de decisiones multiples
-    #el modelo tiene un maximo de 200 arboles, una profundidad de 10, fija la aleatoriedad en 45 y usa todos los nucleos disponibles
+    #El pipeline permite encadenar el preprocesamiento
+    #Primero: hace el procesamiento de las variables categoricas con el OneHotEncoder
+    #Segundo: crea el modelo de regresion con RandomForestRegressor basado en arboles de decisiones multiples
+    #El modelo tiene un maximo de 200 arboles, una profundidad de 10, fija la aleatoriedad en 45 y usa todos los nucleos disponibles
     modelo = Pipeline(steps=[
         ('pre', preprocesamiento),
         ('regresor', RandomForestRegressor(n_estimators=200, max_depth=10, random_state=45, n_jobs=-1))
@@ -68,12 +67,12 @@ def realizar_prediccion():
 
     modelo.fit(X_train, y_train) #se entrena el modelo
 
-    #se hacen las predicciones
+    #Se hacen las predicciones
     y_pred_log = modelo.predict(X_test) #si el ingreso fue 1.000.000, el modelo busca predecir valores alrededor de 13,82 (o sea, su logaritmo)
     y_pred = np.exp(y_pred_log) #se vuelve a la escala original (ingresos totales)
     y_test_exp = np.exp(y_test) #tambien vuelvo a la escala original para comparar los resultados en pesos reales
 
-    #metricas de evaluacion
+    #Metricas de evaluacion
     r2 = r2_score(y_test_exp, y_pred) #mide que proporcion de la varianza del ingreso real el modelo logro explicar (0 a 1, siendo 1 perfecto)
     rmse = np.sqrt(mean_squared_error(y_test_exp, y_pred)) #mide el error entre los ingresos reales y los predichos (se equivoca promedio +-200.000)
     mae = mean_absolute_error(y_test_exp, y_pred) #mide el promedio de los errores absolutos (predice ingresos con un error promedio de $110.000)
@@ -82,7 +81,7 @@ def realizar_prediccion():
     print(f"🌲 RMSE: ${rmse:,.2f}")
     print(f"🌲 MAE: ${mae:,.2f}")
 
-    #se comparan los resultados reales
+    #Se comparan los resultados reales
     comparacion = pd.DataFrame({
         'Ingreso_real_2024': y_test_exp,
         'Ingreso_predicho': y_pred
@@ -90,7 +89,6 @@ def realizar_prediccion():
     print("\n📋 Comparación de ingresos reales vs predichos:")
     print(comparacion.round(2).head(15))
 
-    #grafico para ver el rendimiento del modelo
     sns.set_theme(style="darkgrid")
     plt.figure(figsize=(10, 6))
     sns.scatterplot(x=y_test_exp, y=y_pred, alpha=0.4)
@@ -103,7 +101,8 @@ def realizar_prediccion():
     plt.tight_layout()
     plt.show()
 
-    #cada punto representa una persona
-    #el eje x muestra el ingreso real
-    #el eje y muestra el ingreso predicho por el modelo
-    #la linea roja punteada indica donde deberian caer los puntos si el modelo fuera perfecto
+    #Explicacion:
+        #cada punto representa una persona
+        #el eje x muestra el ingreso real
+        #el eje y muestra el ingreso predicho por el modelo
+        #la linea roja punteada indica donde deberian caer los puntos si el modelo fuera perfecto
