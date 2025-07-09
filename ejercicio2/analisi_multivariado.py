@@ -64,7 +64,7 @@ def realizar_analisis_multivariado():
         lambda x: np.average(x['INGRESO_REAL'], weights=x['PONDII'])
     ).reset_index(name='Ingreso promedio (real)')
 
-    #Para analizar variables categoricas (fueron transformadas a binarias y se utiliza el OneHotEncoder
+    # Para analizar variables categoricas (fueron transformadas a binarias y se utiliza el OneHotEncoder)
     encoder = OneHotEncoder(sparse_output=False, drop=None)
     x_cat = df_grouped[['CALIFICACION_OCUPACIONAL', 'NIVEL_ED', 'CH04']]
     x_enconded = encoder.fit_transform(x_cat)
